@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useCurrentAccount } from '@mysten/dapp-kit';
+import { useCurrentAccount } from '@mysten/dapp-kit-react';
 import WalletConnect from '@/components/WalletConnect';
 import ProductCard from '@/components/ProductCard';
 import CheckoutDialog from '@/components/CheckoutDialog';

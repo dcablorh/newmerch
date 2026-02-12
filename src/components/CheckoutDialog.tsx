@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
   useCurrentAccount,
-  useSignAndExecuteTransaction,
-} from '@mysten/dapp-kit';
+  useDAppKit,
+} from '@mysten/dapp-kit-react';
 import { Transaction } from '@mysten/sui/transactions';
 import {
   Dialog,
@@ -39,10 +39,11 @@ const emptyDelivery: DeliveryInfo = {
 
 const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
   const account = useCurrentAccount();
-  const { mutateAsync: signAndExecute, isPending } = useSignAndExecuteTransaction();
+  const dappKit = useDAppKit();
   const { toast } = useToast();
   const [delivery, setDelivery] = useState<DeliveryInfo>(emptyDelivery);
   const [tab, setTab] = useState<string>('quick');
+  const [isPending, setIsPending] = useState(false);
 
   if (!product) return null;
 
@@ -52,6 +53,7 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
       return;
     }
 
+    setIsPending(true);
     try {
       const tx = new Transaction();
       const [coin] = tx.splitCoins(tx.gas, [product.price]);
@@ -61,11 +63,11 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
         arguments: [tx.object(product.objectId), coin],
       });
 
-      const result = await signAndExecute({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
 
       toast({
         title: 'Purchase successful! 🎉',
-        description: `Receipt NFT minted. Digest: ${result.digest.slice(0, 12)}...`,
+        description: `Receipt NFT minted. Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
       onClose();
     } catch (err: unknown) {
@@ -74,6 +76,8 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
         description: err instanceof Error ? err.message : 'Unknown error',
         variant: 'destructive',
       });
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -83,7 +87,6 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
       return;
     }
 
-    // Validate required fields
     if (
       !delivery.recipientName ||
       !delivery.addressLine1 ||
@@ -101,6 +104,7 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
       return;
     }
 
+    setIsPending(true);
     try {
       const tx = new Transaction();
       const [coin] = tx.splitCoins(tx.gas, [product.price]);
@@ -122,11 +126,11 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
         ],
       });
 
-      const result = await signAndExecute({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
 
       toast({
         title: 'Checkout complete! 🎉',
-        description: `Receipt NFT minted with delivery info. Digest: ${result.digest.slice(0, 12)}...`,
+        description: `Receipt NFT minted with delivery info. Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
       onClose();
       setDelivery(emptyDelivery);
@@ -136,6 +140,8 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
         description: err instanceof Error ? err.message : 'Unknown error',
         variant: 'destructive',
       });
+    } finally {
+      setIsPending(false);
     }
   };
 

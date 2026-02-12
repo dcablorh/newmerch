@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
   useCurrentAccount,
-  useSignAndExecuteTransaction,
-} from '@mysten/dapp-kit';
+  useDAppKit,
+} from '@mysten/dapp-kit-react';
 import { Transaction } from '@mysten/sui/transactions';
 import {
   Sheet,
@@ -21,18 +21,20 @@ import { Settings, Plus, RotateCw, Store, Loader2 } from 'lucide-react';
 
 const AdminPanel = () => {
   const account = useCurrentAccount();
-  const { mutateAsync: signAndExecute, isPending } = useSignAndExecuteTransaction();
+  const dappKit = useDAppKit();
   const { toast } = useToast();
+  const [isPending, setIsPending] = useState(false);
 
   // Create Store
   const handleCreateStore = async () => {
+    setIsPending(true);
     try {
       const tx = new Transaction();
       tx.moveCall({ target: `${PACKAGE_ID}::store::create_store` });
-      const result = await signAndExecute({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
       toast({
         title: 'Store created! 🏪',
-        description: `Share the Store object ID from the transaction. Digest: ${result.digest.slice(0, 12)}...`,
+        description: `Share the Store object ID from the transaction. Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
     } catch (err: unknown) {
       toast({
@@ -40,6 +42,8 @@ const AdminPanel = () => {
         description: err instanceof Error ? err.message : 'Unknown error',
         variant: 'destructive',
       });
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -54,6 +58,7 @@ const AdminPanel = () => {
       toast({ title: 'Fill all product fields', variant: 'destructive' });
       return;
     }
+    setIsPending(true);
     try {
       const tx = new Transaction();
       const encoder = new TextEncoder();
@@ -67,10 +72,10 @@ const AdminPanel = () => {
           tx.pure.vector('u8', Array.from(encoder.encode(productBlobId))),
         ],
       });
-      const result = await signAndExecute({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
       toast({
         title: 'Product added! 📦',
-        description: `Digest: ${result.digest.slice(0, 12)}...`,
+        description: `Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
       setProductName('');
       setProductPrice('');
@@ -82,6 +87,8 @@ const AdminPanel = () => {
         description: err instanceof Error ? err.message : 'Unknown error',
         variant: 'destructive',
       });
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -94,6 +101,7 @@ const AdminPanel = () => {
       toast({ title: 'Fill all fields', variant: 'destructive' });
       return;
     }
+    setIsPending(true);
     try {
       const tx = new Transaction();
       tx.moveCall({
@@ -104,10 +112,10 @@ const AdminPanel = () => {
           tx.pure.u64(parseInt(newStock)),
         ],
       });
-      const result = await signAndExecute({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
       toast({
         title: 'Stock updated! ✅',
-        description: `Digest: ${result.digest.slice(0, 12)}...`,
+        description: `Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
       setStockProductId('');
       setNewStock('');
@@ -117,6 +125,8 @@ const AdminPanel = () => {
         description: err instanceof Error ? err.message : 'Unknown error',
         variant: 'destructive',
       });
+    } finally {
+      setIsPending(false);
     }
   };
 

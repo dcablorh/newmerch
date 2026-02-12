@@ -1,69 +1,20 @@
-import { useSuiClient } from '@mysten/dapp-kit';
+import { useCurrentClient, useCurrentAccount as useCurrentAccountReact } from '@mysten/dapp-kit-react';
 import { useQuery } from '@tanstack/react-query';
 import { PACKAGE_ID } from '@/lib/sui-config';
 import type { Product, Receipt } from '@/types/store';
 
-export function useProducts() {
-  const client = useSuiClient();
-
-  return useQuery({
-    queryKey: ['products'],
-    queryFn: async (): Promise<Product[]> => {
-      // Query all Product objects by type
-      const res = await client.queryEvents({
-        query: {
-          MoveEventType: `${PACKAGE_ID}::store::ProductAdded`,
-        },
-        limit: 50,
-      });
-
-      // Get product object IDs from events and fetch current state
-      // We also need to get product objects directly
-      const objects = await client.getOwnedObjects({
-        owner: '0x0', // shared objects - we'll use a different approach
-      }).catch(() => null);
-
-      // Better approach: query by type
-      const productObjects = await client.queryEvents({
-        query: { MoveEventType: `${PACKAGE_ID}::store::ProductAdded` },
-        limit: 50,
-      });
-
-      // For demo, parse events to get product info
-      // In production, you'd query the actual shared objects
-      const products: Product[] = productObjects.data.map((event) => {
-        const fields = event.parsedJson as {
-          product_id: string;
-          name: string;
-          price: string;
-          stock: string;
-        };
-        return {
-          objectId: event.id.txDigest, // placeholder
-          name: fields.name,
-          price: Number(fields.price),
-          stock: Number(fields.stock),
-          productId: Number(fields.product_id),
-          walrusBlobId: '',
-        };
-      });
-
-      return products;
-    },
-    refetchInterval: 10000,
-  });
-}
+export { useCurrentAccountReact as useAccount };
 
 export function useProductObjects() {
-  const client = useSuiClient();
+  const client = useCurrentClient();
 
   return useQuery({
     queryKey: ['product-objects'],
     retry: 1,
     queryFn: async (): Promise<Product[]> => {
       if (PACKAGE_ID.includes('YOUR_PACKAGE_ID')) return [];
-      // Query dynamic fields or use event-based approach
-      // For shared objects, we query events and then fetch objects
+
+      // Query ProductAdded events to find product objects
       const events = await client.queryEvents({
         query: { MoveEventType: `${PACKAGE_ID}::store::ProductAdded` },
         limit: 50,
@@ -128,7 +79,7 @@ export function useProductObjects() {
 }
 
 export function useReceipts(owner?: string) {
-  const client = useSuiClient();
+  const client = useCurrentClient();
 
   return useQuery({
     queryKey: ['receipts', owner],
