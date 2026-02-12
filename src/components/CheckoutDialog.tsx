@@ -1,24 +1,21 @@
-import { useState } from 'react';
-import {
-  useCurrentAccount,
-  useDAppKit,
-} from '@mysten/dapp-kit-react';
-import { Transaction } from '@mysten/sui/transactions';
+import { useState } from "react";
+import { useCurrentAccount, useDAppKit } from "@mysten/dapp-kit-react";
+import { Transaction } from "@mysten/sui/transactions";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/hooks/use-toast';
-import type { Product, DeliveryInfo } from '@/types/store';
-import { PACKAGE_ID, formatSui } from '@/lib/sui-config';
-import { Loader2, Zap, Truck } from 'lucide-react';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import type { Product, DeliveryInfo } from "@/types/store";
+import { PACKAGE_ID, formatSui } from "@/lib/sui-config";
+import { Loader2, Zap, Truck, Package } from "lucide-react";
 
 interface CheckoutDialogProps {
   product: Product | null;
@@ -27,14 +24,14 @@ interface CheckoutDialogProps {
 }
 
 const emptyDelivery: DeliveryInfo = {
-  recipientName: '',
-  addressLine1: '',
-  addressLine2: '',
-  city: '',
-  postalCode: '',
-  country: '',
-  email: '',
-  phone: '',
+  recipientName: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  postalCode: "",
+  country: "",
+  email: "",
+  phone: "",
 };
 
 const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
@@ -42,14 +39,14 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
   const dappKit = useDAppKit();
   const { toast } = useToast();
   const [delivery, setDelivery] = useState<DeliveryInfo>(emptyDelivery);
-  const [tab, setTab] = useState<string>('quick');
+  const [tab, setTab] = useState<string>("quick");
   const [isPending, setIsPending] = useState(false);
 
   if (!product) return null;
 
   const handleQuickPurchase = async () => {
     if (!account) {
-      toast({ title: 'Connect wallet first', variant: 'destructive' });
+      toast({ title: "Connect wallet first", variant: "destructive" });
       return;
     }
 
@@ -63,18 +60,20 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
         arguments: [tx.object(product.objectId), coin],
       });
 
-      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({
+        transaction: tx,
+      });
 
       toast({
-        title: 'Purchase successful! 🎉',
+        title: "Purchase successful! 🎉",
         description: `Receipt NFT minted. Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
       onClose();
     } catch (err: unknown) {
       toast({
-        title: 'Purchase failed',
-        description: err instanceof Error ? err.message : 'Unknown error',
-        variant: 'destructive',
+        title: "Purchase failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
       });
     } finally {
       setIsPending(false);
@@ -83,7 +82,7 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
 
   const handleCheckout = async () => {
     if (!account) {
-      toast({ title: 'Connect wallet first', variant: 'destructive' });
+      toast({ title: "Connect wallet first", variant: "destructive" });
       return;
     }
 
@@ -97,9 +96,9 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
       !delivery.phone
     ) {
       toast({
-        title: 'Missing fields',
-        description: 'Please fill in all required delivery fields.',
-        variant: 'destructive',
+        title: "Missing fields",
+        description: "Please fill in all required delivery fields.",
+        variant: "destructive",
       });
       return;
     }
@@ -115,30 +114,41 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
         arguments: [
           tx.object(product.objectId),
           coin,
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.recipientName))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.addressLine1))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.addressLine2))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.city))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.postalCode))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.country))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.email))),
-          tx.pure.vector('u8', Array.from(encoder.encode(delivery.phone))),
+          tx.pure.vector(
+            "u8",
+            Array.from(encoder.encode(delivery.recipientName)),
+          ),
+          tx.pure.vector(
+            "u8",
+            Array.from(encoder.encode(delivery.addressLine1)),
+          ),
+          tx.pure.vector(
+            "u8",
+            Array.from(encoder.encode(delivery.addressLine2)),
+          ),
+          tx.pure.vector("u8", Array.from(encoder.encode(delivery.city))),
+          tx.pure.vector("u8", Array.from(encoder.encode(delivery.postalCode))),
+          tx.pure.vector("u8", Array.from(encoder.encode(delivery.country))),
+          tx.pure.vector("u8", Array.from(encoder.encode(delivery.email))),
+          tx.pure.vector("u8", Array.from(encoder.encode(delivery.phone))),
         ],
       });
 
-      const result = await dappKit.signAndExecuteTransaction({ transaction: tx });
+      const result = await dappKit.signAndExecuteTransaction({
+        transaction: tx,
+      });
 
       toast({
-        title: 'Checkout complete! 🎉',
+        title: "Checkout complete! 🎉",
         description: `Receipt NFT minted with delivery info. Digest: ${result.Transaction?.digest?.slice(0, 12)}...`,
       });
       onClose();
       setDelivery(emptyDelivery);
     } catch (err: unknown) {
       toast({
-        title: 'Checkout failed',
-        description: err instanceof Error ? err.message : 'Unknown error',
-        variant: 'destructive',
+        title: "Checkout failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
       });
     } finally {
       setIsPending(false);
@@ -151,138 +161,218 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="text-xl">{product.name}</DialogTitle>
-          <DialogDescription>
-            <span className="gradient-text font-mono text-lg font-bold">
-              {formatSui(product.price)} SUI
-            </span>
-            {' · '}
-            {product.stock} in stock
-          </DialogDescription>
-        </DialogHeader>
-
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="w-full">
-            <TabsTrigger value="quick" className="flex-1 gap-2">
-              <Zap className="h-4 w-4" /> Quick Buy
-            </TabsTrigger>
-            <TabsTrigger value="delivery" className="flex-1 gap-2">
-              <Truck className="h-4 w-4" /> With Delivery
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="quick" className="mt-4 space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Instant purchase — receive a Receipt NFT without delivery details.
-            </p>
-            <Button
-              onClick={handleQuickPurchase}
-              disabled={isPending || !account}
-              className="w-full gap-2"
-            >
-              {isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Zap className="h-4 w-4" />
-              )}
-              {isPending ? 'Processing...' : `Pay ${formatSui(product.price)} SUI`}
-            </Button>
-          </TabsContent>
-
-          <TabsContent value="delivery" className="mt-4 space-y-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  value={delivery.recipientName}
-                  onChange={(e) => updateField('recipientName', e.target.value)}
-                  placeholder="John Doe"
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <Label htmlFor="addr1">Address Line 1 *</Label>
-                <Input
-                  id="addr1"
-                  value={delivery.addressLine1}
-                  onChange={(e) => updateField('addressLine1', e.target.value)}
-                  placeholder="123 Main Street"
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <Label htmlFor="addr2">Address Line 2</Label>
-                <Input
-                  id="addr2"
-                  value={delivery.addressLine2}
-                  onChange={(e) => updateField('addressLine2', e.target.value)}
-                  placeholder="Apt 4B"
-                />
-              </div>
-              <div>
-                <Label htmlFor="city">City *</Label>
-                <Input
-                  id="city"
-                  value={delivery.city}
-                  onChange={(e) => updateField('city', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="postal">Postal Code *</Label>
-                <Input
-                  id="postal"
-                  value={delivery.postalCode}
-                  onChange={(e) => updateField('postalCode', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="country">Country *</Label>
-                <Input
-                  id="country"
-                  value={delivery.country}
-                  onChange={(e) => updateField('country', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone">Phone *</Label>
-                <Input
-                  id="phone"
-                  value={delivery.phone}
-                  onChange={(e) => updateField('phone', e.target.value)}
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={delivery.email}
-                  onChange={(e) => updateField('email', e.target.value)}
-                  placeholder="you@example.com"
-                />
-              </div>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg neo-border neo-shadow-lg p-0 bg-white">
+        <div className="p-6 bg-primary border-b-2 border-black">
+          <DialogHeader>
+            <div className="flex items-center gap-3 mb-2">
+              <Package className="w-8 h-8 text-black" />
+              <DialogTitle className="text-3xl font-black italic uppercase text-black leading-none">
+                CHECKOUT
+              </DialogTitle>
             </div>
-            <Button
-              onClick={handleCheckout}
-              disabled={isPending || !account}
-              className="w-full gap-2"
-            >
-              {isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Truck className="h-4 w-4" />
-              )}
-              {isPending ? 'Processing...' : `Checkout ${formatSui(product.price)} SUI`}
-            </Button>
-          </TabsContent>
-        </Tabs>
+            <DialogDescription className="text-black font-bold uppercase text-xs">
+              Review and confirm your purchase
+            </DialogDescription>
+          </DialogHeader>
+        </div>
 
-        {!account && (
-          <p className="text-center text-sm text-destructive">
-            Please connect your wallet to purchase.
-          </p>
-        )}
+        <div className="p-6 space-y-6">
+          <div className="neo-card bg-[#F5F5F5] p-4 flex items-center justify-between">
+            <div>
+              <p className="font-extrabold text-lg uppercase">{product.name}</p>
+              <p className="text-[10px] font-black uppercase text-muted-foreground">
+                PRODUCT #{product.productId}
+              </p>
+            </div>
+            <p className="text-xl font-black">{formatSui(product.price)} SUI</p>
+          </div>
+
+          <Tabs value={tab} onValueChange={setTab} className="w-full">
+            <TabsList className="neo-border bg-[#F5F5F5] h-12 p-1 gap-2 rounded-xl mb-6">
+              <TabsTrigger
+                value="quick"
+                className="flex-1 font-black uppercase text-xs data-[state=active]:bg-black data-[state=active]:text-white rounded-lg transition-all"
+              >
+                <Zap className="h-4 w-4 mr-2" /> Quick Buy
+              </TabsTrigger>
+              <TabsTrigger
+                value="delivery"
+                className="flex-1 font-black uppercase text-xs data-[state=active]:bg-black data-[state=active]:text-white rounded-lg transition-all"
+              >
+                <Truck className="h-4 w-4 mr-2" /> With Delivery
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="quick" className="space-y-4 outline-none">
+              <div className="neo-card border-dashed bg-white p-6 text-center space-y-4">
+                <p className="text-sm font-bold text-muted-foreground uppercase leading-tight">
+                  Instant purchase — receive a Receipt NFT directly to your
+                  wallet. You can provide delivery info later.
+                </p>
+                <Button
+                  onClick={handleQuickPurchase}
+                  disabled={isPending || !account}
+                  className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black text-lg py-6"
+                >
+                  {isPending ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Zap className="h-5 w-5" />
+                  )}
+                  {isPending
+                    ? "PROCESSING..."
+                    : `PAY ${formatSui(product.price)} SUI`}
+                </Button>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="delivery" className="space-y-4 outline-none">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2 space-y-1.5">
+                  <Label
+                    htmlFor="name"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Full Name *
+                  </Label>
+                  <Input
+                    id="name"
+                    value={delivery.recipientName}
+                    onChange={(e) =>
+                      updateField("recipientName", e.target.value)
+                    }
+                    placeholder="JOHN DOE"
+                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                  />
+                </div>
+                <div className="sm:col-span-2 space-y-1.5">
+                  <Label
+                    htmlFor="addr1"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Address Line 1 *
+                  </Label>
+                  <Input
+                    id="addr1"
+                    value={delivery.addressLine1}
+                    onChange={(e) =>
+                      updateField("addressLine1", e.target.value)
+                    }
+                    placeholder="123 MAIN ST"
+                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                  />
+                </div>
+                <div className="sm:col-span-2 space-y-1.5">
+                  <Label
+                    htmlFor="addr2"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Address Line 2
+                  </Label>
+                  <Input
+                    id="addr2"
+                    value={delivery.addressLine2}
+                    onChange={(e) =>
+                      updateField("addressLine2", e.target.value)
+                    }
+                    placeholder="APT, SUITE, ETC."
+                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="city"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    City *
+                  </Label>
+                  <Input
+                    id="city"
+                    value={delivery.city}
+                    onChange={(e) => updateField("city", e.target.value)}
+                    className="neo-border rounded-xl font-bold p-6"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="postal"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Postal Code *
+                  </Label>
+                  <Input
+                    id="postal"
+                    value={delivery.postalCode}
+                    onChange={(e) => updateField("postalCode", e.target.value)}
+                    className="neo-border rounded-xl font-bold p-6"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="country"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Country *
+                  </Label>
+                  <Input
+                    id="country"
+                    value={delivery.country}
+                    onChange={(e) => updateField("country", e.target.value)}
+                    className="neo-border rounded-xl font-bold p-6"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="phone"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Phone *
+                  </Label>
+                  <Input
+                    id="phone"
+                    value={delivery.phone}
+                    onChange={(e) => updateField("phone", e.target.value)}
+                    className="neo-border rounded-xl font-bold p-6"
+                  />
+                </div>
+                <div className="sm:col-span-2 space-y-1.5">
+                  <Label
+                    htmlFor="email"
+                    className="text-[10px] font-black uppercase pl-1"
+                  >
+                    Email *
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={delivery.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    placeholder="YOU@EXAMPLE.COM"
+                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                  />
+                </div>
+              </div>
+              <Button
+                onClick={handleCheckout}
+                disabled={isPending || !account}
+                className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black text-lg py-6 mt-4"
+              >
+                {isPending ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <Truck className="h-5 w-5" />
+                )}
+                {isPending ? "PROCESSING..." : `COMPLETE PURCHASE`}
+              </Button>
+            </TabsContent>
+          </Tabs>
+
+          {!account && (
+            <p className="text-center font-black uppercase text-xs text-destructive bg-destructive/10 p-4 rounded-xl neo-border">
+              Please connect your wallet to purchase.
+            </p>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

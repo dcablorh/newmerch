@@ -1,18 +1,23 @@
 // Deployed package ID
-export const PACKAGE_ID = '0xc86a517ebf83b4974fa6b6edda66da84e03011fb0d73a75aa0c8d8c1d04f66cf';
+export const PACKAGE_ID =
+  "0xf8a5385c28ab4f4deb9b7bf4f0a63fed11653cc358f9589aa4075ffb891d8eae";
 
 // Replace with your store object ID after calling create_store
-export const STORE_ID = '0xYOUR_STORE_ID';
+export const STORE_ID = "0xYOUR_STORE_ID";
 
 // Smart contract object IDs from deployment
-export const DISPLAY_ID = '0x65edce5eab8e3d763651478f6db88f6aea8a18f053fc82c3cfdeaca997756033';
-export const PUBLISHER_ID = '0xf4731bf16c64530b2d07174f172766f41844e2bb036908b136e77cdbc11f9a73';
-export const UPGRADE_CAP_ID = '0x34f05c82cb3a14b161bf1c5bfc2d47a66e11bf635f4395d617f8c163ea715226';
+export const DISPLAY_ID =
+  "0x7c69d5ddcdb2368a2757a9bec9f86e315c878fa169011cd12230fa7b084a8e76";
+export const PUBLISHER_ID =
+  "0x342350d99e95562eaa8f56c088a7354da517e9dfa9975cbbc9fccca3f7f571d2";
+export const UPGRADE_CAP_ID =
+  "0xa479b90dbba4fb9c2d4f8565e42c44a1e2cdecd429264ffe9f53a7538fa67a86";
 
 // Admin / merch_store address (where payments go)
-export const MERCH_STORE_ADDRESS = '0xe2bf986ccb385f8e5d9500ce8332b69a5cee19579152c240c09213e80e9355b8';
+export const MERCH_STORE_ADDRESS =
+  "0xe2bf986ccb385f8e5d9500ce8332b69a5cee19579152c240c09213e80e9355b8";
 
-export const NETWORK = 'testnet' as const;
+export const NETWORK = "testnet" as const;
 
 // 1 SUI = 1_000_000_000 MIST
 export const MIST_PER_SUI = 1_000_000_000;
