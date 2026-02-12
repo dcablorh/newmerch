@@ -6,11 +6,13 @@ import CheckoutDialog from '@/components/CheckoutDialog';
 import AdminPanel from '@/components/AdminPanel';
 import ReceiptsPanel from '@/components/ReceiptsPanel';
 import { useProductObjects } from '@/hooks/use-store-data';
+import { useIsAdmin } from '@/hooks/use-admin-store';
 import type { Product } from '@/types/store';
 import { Store, Loader2 } from 'lucide-react';
 
 const Index = () => {
   const account = useCurrentAccount();
+  const { isAdmin } = useIsAdmin();
   const { data: products, isLoading } = useProductObjects();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -29,7 +31,7 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-3">
             {account && <ReceiptsPanel />}
-            {account && <AdminPanel />}
+            {account && isAdmin && <AdminPanel />}
             <WalletConnect />
           </div>
         </div>
