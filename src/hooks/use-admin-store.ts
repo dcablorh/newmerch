@@ -1,6 +1,6 @@
 import { useCurrentClient, useCurrentAccount } from '@mysten/dapp-kit-react';
 import { useQuery } from '@tanstack/react-query';
-import { PACKAGE_ID, MERCH_STORE_ADDRESS } from '@/lib/sui-config';
+import { PACKAGE_ID } from '@/lib/sui-config';
 
 export interface StoreObject {
   objectId: string;
@@ -14,28 +14,52 @@ export function useAdminStore() {
   return useQuery({
     queryKey: ['admin-store', account?.address],
     queryFn: async (): Promise<StoreObject | null> => {
-      if (!account?.address) return null;
+      if (!account?.address) {
+        console.log('[Store] No account connected');
+        return null;
+      }
 
-      // Query for Store objects owned by the current account
-      const objects = await client.getOwnedObjects({
-        owner: account.address,
-        filter: { StructType: `${PACKAGE_ID}::store::Store` },
-        options: { showContent: true },
-      });
+      try {
+        // Query for StoreCreated events to get store_id and admin
+        const events = await client.queryEvents({
+          query: { MoveEventType: `${PACKAGE_ID}::store::StoreCreated` },
+          limit: 50,
+          order: 'descending',
+        });
 
-      if (objects.data.length === 0) return null;
+        console.log('[Store] StoreCreated events found:', events.data.length);
 
-      const obj = objects.data[0];
-      if (!obj.data?.content || obj.data.content.dataType !== 'moveObject') return null;
+        if (events.data.length === 0) {
+          console.log('[Store] No StoreCreated event found');
+          return null;
+        }
 
-      const fields = (obj.data.content as { fields: Record<string, unknown> }).fields as {
-        admin: string;
-      };
+        // Get the most recent store event
+        const event = events.data[0];
+        const parsedJson = event.parsedJson as {
+          admin?: string;
+          store_id?: string;
+        };
 
-      return {
-        objectId: obj.data.objectId,
-        admin: fields.admin,
-      };
+        console.log('[Store] Event data:', {
+          admin: parsedJson.admin,
+          storeId: parsedJson.store_id,
+          currentAddress: account.address,
+        });
+
+        if (!parsedJson.admin || !parsedJson.store_id) {
+          console.log('[Store] Invalid event data');
+          return null;
+        }
+
+        return {
+          objectId: parsedJson.store_id,
+          admin: parsedJson.admin,
+        };
+      } catch (error) {
+        console.error('[Store] Error querying store event:', error);
+        return null;
+      }
     },
     enabled: !!account?.address,
     refetchInterval: 10000,
@@ -44,9 +68,18 @@ export function useAdminStore() {
 
 export function useIsAdmin() {
   const account = useCurrentAccount();
-  const { data: store, isLoading } = useAdminStore();
+  const { data: store, isLoading, error } = useAdminStore();
 
-  const isAdmin = !!account && store?.admin === account.address;
+  const isAdmin = !!(account && store && store.admin === account.address);
+
+  console.log('[Admin Check]', {
+    hasAccount: !!account,
+    hasStore: !!store,
+    currentAddress: account?.address,
+    storeAdmin: store?.admin,
+    isAdmin,
+    isLoading,
+  });
 
   return {
     isAdmin,
@@ -54,5 +87,7 @@ export function useIsAdmin() {
     account: account?.address,
     adminAddress: store?.admin,
     storeId: store?.objectId,
+    hasStore: !!store,
+    error: error instanceof Error ? error.message : null,
   };
 }
