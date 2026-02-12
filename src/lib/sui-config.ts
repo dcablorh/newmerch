@@ -1,17 +1,17 @@
 // Deployed package ID
 export const PACKAGE_ID =
-  "0xf8a5385c28ab4f4deb9b7bf4f0a63fed11653cc358f9589aa4075ffb891d8eae";
+  "0xee3b31435df25a8b913275b8f263f2a1bbc3cc196dad9fd7749e201b60d0423a";
 
 // Replace with your store object ID after calling create_store
 export const STORE_ID = "0xYOUR_STORE_ID";
 
 // Smart contract object IDs from deployment
 export const DISPLAY_ID =
-  "0x7c69d5ddcdb2368a2757a9bec9f86e315c878fa169011cd12230fa7b084a8e76";
+  "0x693b9dca4c758e0da710572e29f106e6fc451f6a3a61888147c942e375919025";
 export const PUBLISHER_ID =
-  "0x342350d99e95562eaa8f56c088a7354da517e9dfa9975cbbc9fccca3f7f571d2";
+  "0xe10ed04557f3ec86d8faa1c5071d9d23596a606dd285ad0897b61c8ed919e5f0";
 export const UPGRADE_CAP_ID =
-  "0xa479b90dbba4fb9c2d4f8565e42c44a1e2cdecd429264ffe9f53a7538fa67a86";
+  "0x393eef81b177bcb867f35678731e753851048cf4e4ea84c02c116db7dcc945ff";
 
 // Admin / merch_store address (where payments go)
 export const MERCH_STORE_ADDRESS =
