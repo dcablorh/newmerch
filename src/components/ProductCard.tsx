@@ -11,9 +11,11 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, onPurchase }: ProductCardProps) => {
   const inStock = product.stock > 0;
-  const imageUrl = product.walrusBlobId
-    ? walrusImageUrl(product.walrusBlobId)
-    : "/placeholder.svg";
+  const imageUrl = product.imageUrl
+    ? product.imageUrl
+    : product.walrusBlobId
+      ? walrusImageUrl(product.walrusBlobId)
+      : "/placeholder.svg";
 
   return (
     <div className="neo-card group">

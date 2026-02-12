@@ -61,7 +61,8 @@ export function useProductObjects() {
             name: string;
             price: string;
             stock: string;
-            walrus_blob_id: string;
+            walrus_blob_id?: string;
+            image_url?: string;
             product_id: string;
           };
           return {
@@ -70,6 +71,7 @@ export function useProductObjects() {
             price: Number(fields.price),
             stock: Number(fields.stock),
             walrusBlobId: fields.walrus_blob_id,
+            imageUrl: fields.image_url,
             productId: Number(fields.product_id),
           };
         });
@@ -100,7 +102,8 @@ export function useReceipts(owner?: string) {
             product_id: string;
             price_paid: string;
             buyer: string;
-            walrus_blob_id: string;
+            walrus_blob_id?: string;
+            image_url?: string;
             delivery_info: unknown;
             checkout_timestamp: string;
           };
@@ -111,6 +114,7 @@ export function useReceipts(owner?: string) {
             pricePaid: Number(fields.price_paid),
             buyer: fields.buyer,
             walrusBlobId: fields.walrus_blob_id,
+            imageUrl: fields.image_url,
             checkoutTimestamp: Number(fields.checkout_timestamp),
           };
         });

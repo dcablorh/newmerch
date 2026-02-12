@@ -3,7 +3,8 @@ export interface Product {
   name: string;
   price: number; // in MIST
   stock: number;
-  walrusBlobId: string;
+  walrusBlobId?: string;
+  imageUrl?: string;
   productId: number;
 }
 
@@ -24,7 +25,8 @@ export interface Receipt {
   productId: number;
   pricePaid: number;
   buyer: string;
-  walrusBlobId: string;
+  walrusBlobId?: string;
+  imageUrl?: string;
   deliveryInfo?: DeliveryInfo;
   checkoutTimestamp: number;
 }
