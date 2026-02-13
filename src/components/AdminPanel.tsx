@@ -220,33 +220,33 @@ const AdminPanel = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="neo-button bg-white p-2">
-          <Settings className="h-5 w-5" />
+        <button className="neo-button bg-white p-2 flex-shrink-0">
+          <Settings className="h-4 sm:h-5 w-4 sm:w-5" />
         </button>
       </SheetTrigger>
-      <SheetContent className="overflow-y-auto neo-border bg-[#FDFBF1]">
-        <SheetHeader className="mb-8">
-          <SheetTitle className="flex items-center gap-3 text-3xl font-black italic uppercase">
-            <Settings className="h-8 w-8 text-black" />
+      <SheetContent className="overflow-y-auto neo-border bg-[#FDFBF1] w-[95vw] sm:w-auto">
+        <SheetHeader className="mb-6 sm:mb-8">
+          <SheetTitle className="flex items-center gap-2 sm:gap-3 text-2xl sm:text-3xl font-black italic uppercase leading-tight">
+            <Settings className="h-6 sm:h-8 w-6 sm:h-8 text-black flex-shrink-0" />
             ADMIN CONTROL
           </SheetTitle>
         </SheetHeader>
 
-        <div className="space-y-10 pb-20">
+        <div className="space-y-6 sm:space-y-10 pb-20">
           {/* Create Store */}
-          <section className="space-y-4">
+          <section className="space-y-2 sm:space-y-4">
             <h3 className="flex items-center gap-2 text-xs font-black uppercase text-muted-foreground">
-              <Store className="h-4 w-4" /> INITIALIZE STORE
+              <Store className="h-3 sm:h-4 w-3 sm:w-4" /> INITIALIZE STORE
             </h3>
             <button
               onClick={handleCreateStore}
               disabled={isPending}
-              className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black flex items-center justify-center gap-2 py-4"
+              className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black flex items-center justify-center gap-2 py-3 sm:py-4 text-xs sm:text-base"
             >
               {isPending ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" />
               ) : (
-                <Plus className="h-5 w-5" />
+                <Plus className="h-4 sm:h-5 w-4 sm:w-5" />
               )}
               CREATE STORE OBJECT
             </button>
@@ -255,15 +255,15 @@ const AdminPanel = () => {
           <Separator className="bg-black/10" />
 
           {/* Add Product */}
-          <section className="space-y-6">
+          <section className="space-y-3 sm:space-y-6">
             <h3 className="flex items-center gap-2 text-xs font-black uppercase text-muted-foreground">
-              <Plus className="h-4 w-4" /> ADD NEW MERCH
+              <Plus className="h-3 sm:h-4 w-3 sm:w-4" /> ADD NEW MERCH
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="space-y-1.5">
                 <Label
                   htmlFor="pname"
-                  className="text-[10px] font-black uppercase pl-1"
+                  className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                 >
                   Name
                 </Label>
@@ -272,13 +272,13 @@ const AdminPanel = () => {
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
                   placeholder="COOL T-SHIRT"
-                  className="neo-border py-6 font-bold uppercase rounded-xl"
+                  className="neo-border py-3 sm:py-6 font-bold uppercase rounded-lg sm:rounded-xl text-sm"
                 />
               </div>
               <div className="space-y-1.5">
                 <Label
                   htmlFor="pdesc"
-                  className="text-[10px] font-black uppercase pl-1"
+                  className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                 >
                   Description
                 </Label>
@@ -287,14 +287,14 @@ const AdminPanel = () => {
                   value={productDescription}
                   onChange={(e) => setProductDescription(e.target.value)}
                   placeholder="HIGH QUALITY"
-                  className="neo-border py-6 font-bold uppercase rounded-xl"
+                  className="neo-border py-3 sm:py-6 font-bold uppercase rounded-lg sm:rounded-xl text-sm"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="pprice"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Price (SUI)
                   </Label>
@@ -305,13 +305,13 @@ const AdminPanel = () => {
                     value={productPrice}
                     onChange={(e) => setProductPrice(e.target.value)}
                     placeholder="0.5"
-                    className="neo-border py-6 font-bold rounded-xl text-center"
+                    className="neo-border py-3 sm:py-6 font-bold rounded-lg sm:rounded-xl text-center text-sm"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="pstock"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Stock
                   </Label>
@@ -321,14 +321,14 @@ const AdminPanel = () => {
                     value={productStock}
                     onChange={(e) => setProductStock(e.target.value)}
                     placeholder="100"
-                    className="neo-border py-6 font-bold rounded-xl text-center"
+                    className="neo-border py-3 sm:py-6 font-bold rounded-lg sm:rounded-xl text-center text-sm"
                   />
                 </div>
               </div>
               <div className="space-y-1.5">
                 <Label
                   htmlFor="pimg"
-                  className="text-[10px] font-black uppercase pl-1"
+                  className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                 >
                   Image URL
                 </Label>
@@ -337,20 +337,20 @@ const AdminPanel = () => {
                   value={productImageUrl}
                   onChange={(e) => setProductImageUrl(e.target.value)}
                   placeholder="HTTPS://..."
-                  className="neo-border py-6 font-bold rounded-xl"
+                  className="neo-border py-3 sm:py-6 font-bold rounded-lg sm:rounded-xl text-sm"
                 />
               </div>
               <button
                 onClick={handleAddProduct}
                 disabled={isPending}
-                className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black flex items-center justify-center gap-2 py-4 mt-2"
+                className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black flex items-center justify-center gap-2 py-3 sm:py-4 mt-2 text-xs sm:text-base"
               >
                 {isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" />
                 ) : (
-                  <Plus className="h-5 w-5" />
+                  <Plus className="h-4 sm:h-5 w-4 sm:w-5" />
                 )}
-                ADD PRODUCT TO ON-CHAIN STORE
+                ADD PRODUCT
               </button>
             </div>
           </section>
@@ -358,15 +358,15 @@ const AdminPanel = () => {
           <Separator className="bg-black/10" />
 
           {/* Update Stock */}
-          <section className="space-y-6">
+          <section className="space-y-3 sm:space-y-6">
             <h3 className="flex items-center gap-2 text-xs font-black uppercase text-muted-foreground">
-              <RotateCw className="h-4 w-4" /> UPDATE INVENTORY
+              <RotateCw className="h-3 sm:h-4 w-3 sm:w-4" /> UPDATE INVENTORY
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="space-y-1.5">
                 <Label
                   htmlFor="spid"
-                  className="text-[10px] font-black uppercase pl-1"
+                  className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                 >
                   Product Object ID
                 </Label>
@@ -375,13 +375,13 @@ const AdminPanel = () => {
                   value={stockProductId}
                   onChange={(e) => setStockProductId(e.target.value)}
                   placeholder="0X..."
-                  className="neo-border py-6 font-bold rounded-xl"
+                  className="neo-border py-3 sm:py-6 font-bold rounded-lg sm:rounded-xl text-sm"
                 />
               </div>
               <div className="space-y-1.5">
                 <Label
                   htmlFor="sstock"
-                  className="text-[10px] font-black uppercase pl-1"
+                  className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                 >
                   New Stock Level
                 </Label>
@@ -391,18 +391,18 @@ const AdminPanel = () => {
                   value={newStock}
                   onChange={(e) => setNewStock(e.target.value)}
                   placeholder="50"
-                  className="neo-border py-6 font-bold rounded-xl"
+                  className="neo-border py-3 sm:py-6 font-bold rounded-lg sm:rounded-xl text-sm"
                 />
               </div>
               <button
                 onClick={handleUpdateStock}
                 disabled={isPending}
-                className="w-full neo-button bg-white text-black font-black flex items-center justify-center gap-2 py-4"
+                className="w-full neo-button bg-white text-black font-black flex items-center justify-center gap-2 py-3 sm:py-4 text-xs sm:text-base"
               >
                 {isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" />
                 ) : (
-                  <RotateCw className="h-5 w-5" />
+                  <RotateCw className="h-4 sm:h-5 w-4 sm:w-5" />
                 )}
                 RESTOCK PRODUCT
               </button>
@@ -412,15 +412,15 @@ const AdminPanel = () => {
           <Separator className="bg-black/10" />
 
           {/* Delete Product */}
-          <section className="space-y-6">
+          <section className="space-y-3 sm:space-y-6">
             <h3 className="flex items-center gap-2 text-xs font-black uppercase text-destructive">
-              <BadgeAlert className="h-4 w-4" /> DANGER ZONE
+              <BadgeAlert className="h-3 sm:h-4 w-3 sm:w-4" /> DANGER ZONE
             </h3>
-            <div className="neo-card bg-destructive/5 border-destructive border-dashed p-4 space-y-4">
+            <div className="neo-card bg-destructive/5 border-destructive border-dashed p-3 sm:p-4 space-y-3 sm:space-y-4">
               <div className="space-y-1.5">
                 <Label
                   htmlFor="dpid"
-                  className="text-[10px] font-black uppercase text-destructive pl-1"
+                  className="text-[8px] sm:text-[10px] font-black uppercase text-destructive pl-1"
                 >
                   Product Object ID
                 </Label>
@@ -429,20 +429,20 @@ const AdminPanel = () => {
                   value={deleteProductId}
                   onChange={(e) => setDeleteProductId(e.target.value)}
                   placeholder="0X..."
-                  className="neo-border border-destructive/30 py-6 font-bold rounded-xl bg-white"
+                  className="neo-border border-destructive/30 py-3 sm:py-6 font-bold rounded-lg sm:rounded-xl bg-white text-sm"
                 />
               </div>
               <button
                 onClick={handleDeleteProduct}
                 disabled={isPending}
-                className="w-full neo-button bg-destructive hover:bg-destructive/90 text-white font-black flex items-center justify-center gap-2 py-4"
+                className="w-full neo-button bg-destructive hover:bg-destructive/90 text-white font-black flex items-center justify-center gap-2 py-3 sm:py-4 text-xs sm:text-base"
               >
                 {isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" />
                 ) : (
-                  <ShieldAlert className="h-5 w-5" />
+                  <ShieldAlert className="h-4 sm:h-5 w-4 sm:w-5" />
                 )}
-                REMOVE PRODUCT PERMANENTLY
+                REMOVE PRODUCT
               </button>
             </div>
           </section>

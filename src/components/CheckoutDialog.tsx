@@ -161,12 +161,12 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg neo-border neo-shadow-lg p-0 bg-white">
-        <div className="p-6 bg-primary border-b-2 border-black">
+      <DialogContent className="max-h-[95vh] overflow-y-auto w-[95vw] sm:max-w-lg neo-border neo-shadow-lg p-0 bg-white rounded-2xl">
+        <div className="p-4 sm:p-6 bg-primary border-b-2 border-black">
           <DialogHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <Package className="w-8 h-8 text-black" />
-              <DialogTitle className="text-3xl font-black italic uppercase text-black leading-none">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+              <Package className="w-6 sm:w-8 h-6 sm:h-8 text-black flex-shrink-0" />
+              <DialogTitle className="text-2xl sm:text-3xl font-black italic uppercase text-black leading-none">
                 CHECKOUT
               </DialogTitle>
             </div>
@@ -176,48 +176,48 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
           </DialogHeader>
         </div>
 
-        <div className="p-6 space-y-6">
-          <div className="neo-card bg-[#F5F5F5] p-4 flex items-center justify-between">
-            <div>
-              <p className="font-extrabold text-lg uppercase">{product.name}</p>
-              <p className="text-[10px] font-black uppercase text-muted-foreground">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          <div className="neo-card bg-[#F5F5F5] p-3 sm:p-4 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 xs:gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="font-extrabold text-base sm:text-lg uppercase leading-tight">{product.name}</p>
+              <p className="text-[8px] sm:text-[10px] font-black uppercase text-muted-foreground">
                 PRODUCT #{product.productId}
               </p>
             </div>
-            <p className="text-xl font-black">{formatSui(product.price)} SUI</p>
+            <p className="text-lg sm:text-xl font-black flex-shrink-0 whitespace-nowrap">{formatSui(product.price)} SUI</p>
           </div>
 
           <Tabs value={tab} onValueChange={setTab} className="w-full">
-            <TabsList className="neo-border bg-[#F5F5F5] h-12 p-1 gap-2 rounded-xl mb-6">
+            <TabsList className="neo-border bg-[#F5F5F5] h-10 sm:h-12 p-1 gap-1 sm:gap-2 rounded-lg sm:rounded-xl mb-4 sm:mb-6 w-full flex-wrap">
               <TabsTrigger
                 value="quick"
-                className="flex-1 font-black uppercase text-xs data-[state=active]:bg-black data-[state=active]:text-white rounded-lg transition-all"
+                className="flex-1 font-black uppercase text-xs sm:text-sm data-[state=active]:bg-black data-[state=active]:text-white rounded-md transition-all min-w-fit"
               >
-                <Zap className="h-4 w-4 mr-2" /> Quick Buy
+                <Zap className="h-3 sm:h-4 w-3 sm:w-4 mr-1" /> <span className="hidden xs:inline">Quick Buy</span>
               </TabsTrigger>
               <TabsTrigger
                 value="delivery"
-                className="flex-1 font-black uppercase text-xs data-[state=active]:bg-black data-[state=active]:text-white rounded-lg transition-all"
+                className="flex-1 font-black uppercase text-xs sm:text-sm data-[state=active]:bg-black data-[state=active]:text-white rounded-md transition-all min-w-fit"
               >
-                <Truck className="h-4 w-4 mr-2" /> With Delivery
+                <Truck className="h-3 sm:h-4 w-3 sm:w-4 mr-1" /> <span className="hidden xs:inline">With Delivery</span>
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="quick" className="space-y-4 outline-none">
-              <div className="neo-card border-dashed bg-white p-6 text-center space-y-4">
-                <p className="text-sm font-bold text-muted-foreground uppercase leading-tight">
+            <TabsContent value="quick" className="space-y-3 sm:space-y-4 outline-none">
+              <div className="neo-card border-dashed bg-white p-4 sm:p-6 text-center space-y-3 sm:space-y-4">
+                <p className="text-xs sm:text-sm font-bold text-muted-foreground uppercase leading-tight">
                   Instant purchase — receive a Receipt NFT directly to your
                   wallet. You can provide delivery info later.
                 </p>
                 <Button
                   onClick={handleQuickPurchase}
                   disabled={isPending || !account}
-                  className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black text-lg py-6"
+                  className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black text-sm sm:text-base py-4 sm:py-6 h-auto"
                 >
                   {isPending ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" />
                   ) : (
-                    <Zap className="h-5 w-5" />
+                    <Zap className="h-4 sm:h-5 w-4 sm:w-5" />
                   )}
                   {isPending
                     ? "PROCESSING..."
@@ -226,12 +226,12 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
               </div>
             </TabsContent>
 
-            <TabsContent value="delivery" className="space-y-4 outline-none">
-              <div className="grid gap-4 sm:grid-cols-2">
+            <TabsContent value="delivery" className="space-y-3 sm:space-y-4 outline-none">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
                 <div className="sm:col-span-2 space-y-1.5">
                   <Label
                     htmlFor="name"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Full Name *
                   </Label>
@@ -242,13 +242,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                       updateField("recipientName", e.target.value)
                     }
                     placeholder="JOHN DOE"
-                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base placeholder:text-black/20"
                   />
                 </div>
                 <div className="sm:col-span-2 space-y-1.5">
                   <Label
                     htmlFor="addr1"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Address Line 1 *
                   </Label>
@@ -259,13 +259,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                       updateField("addressLine1", e.target.value)
                     }
                     placeholder="123 MAIN ST"
-                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base placeholder:text-black/20"
                   />
                 </div>
                 <div className="sm:col-span-2 space-y-1.5">
                   <Label
                     htmlFor="addr2"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Address Line 2
                   </Label>
@@ -276,13 +276,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                       updateField("addressLine2", e.target.value)
                     }
                     placeholder="APT, SUITE, ETC."
-                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base placeholder:text-black/20"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="city"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     City *
                   </Label>
@@ -290,13 +290,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                     id="city"
                     value={delivery.city}
                     onChange={(e) => updateField("city", e.target.value)}
-                    className="neo-border rounded-xl font-bold p-6"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="postal"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Postal Code *
                   </Label>
@@ -304,13 +304,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                     id="postal"
                     value={delivery.postalCode}
                     onChange={(e) => updateField("postalCode", e.target.value)}
-                    className="neo-border rounded-xl font-bold p-6"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="country"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Country *
                   </Label>
@@ -318,13 +318,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                     id="country"
                     value={delivery.country}
                     onChange={(e) => updateField("country", e.target.value)}
-                    className="neo-border rounded-xl font-bold p-6"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="phone"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Phone *
                   </Label>
@@ -332,13 +332,13 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                     id="phone"
                     value={delivery.phone}
                     onChange={(e) => updateField("phone", e.target.value)}
-                    className="neo-border rounded-xl font-bold p-6"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base"
                   />
                 </div>
                 <div className="sm:col-span-2 space-y-1.5">
                   <Label
                     htmlFor="email"
-                    className="text-[10px] font-black uppercase pl-1"
+                    className="text-[8px] sm:text-[10px] font-black uppercase pl-1"
                   >
                     Email *
                   </Label>
@@ -348,19 +348,19 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
                     value={delivery.email}
                     onChange={(e) => updateField("email", e.target.value)}
                     placeholder="YOU@EXAMPLE.COM"
-                    className="neo-border rounded-xl font-bold p-6 placeholder:text-black/20"
+                    className="neo-border rounded-lg sm:rounded-xl font-bold p-3 sm:p-4 text-sm sm:text-base placeholder:text-black/20"
                   />
                 </div>
               </div>
               <Button
                 onClick={handleCheckout}
                 disabled={isPending || !account}
-                className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black text-lg py-6 mt-4"
+                className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-black text-sm sm:text-base py-4 sm:py-6 h-auto mt-3 sm:mt-4"
               >
                 {isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 animate-spin" />
                 ) : (
-                  <Truck className="h-5 w-5" />
+                  <Truck className="h-4 sm:h-5 w-4 sm:w-5" />
                 )}
                 {isPending ? "PROCESSING..." : `COMPLETE PURCHASE`}
               </Button>
@@ -368,7 +368,7 @@ const CheckoutDialog = ({ product, open, onClose }: CheckoutDialogProps) => {
           </Tabs>
 
           {!account && (
-            <p className="text-center font-black uppercase text-xs text-destructive bg-destructive/10 p-4 rounded-xl neo-border">
+            <p className="text-center font-black uppercase text-xs bg-destructive/10 p-3 sm:p-4 rounded-lg sm:rounded-xl neo-border text-destructive">
               Please connect your wallet to purchase.
             </p>
           )}
