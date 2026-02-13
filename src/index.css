@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,88 +6,94 @@
 
 @layer base {
   :root {
-    --background: 48 83% 97%; /* #FDFBF1 Cream */
-    --foreground: 0 0% 0%;
+    --background: 204 60% 94%;
+    --foreground: 220 20% 10%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card: 40 50% 97%;
+    --card-foreground: 220 20% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover: 40 50% 97%;
+    --popover-foreground: 220 20% 10%;
 
-    --primary: 199 89% 65%; /* #5BC5F2 Blue */
-    --primary-foreground: 0 0% 0%;
+    --primary: 14 100% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 334 100% 79%; /* #FF91C2 Pink */
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 204 80% 65%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 48 30% 90%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 204 30% 88%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 199 89% 65%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 204 80% 65%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 199 89% 65%;
+    --border: 220 20% 10%;
+    --input: 220 20% 10%;
+    --ring: 14 100% 65%;
 
     --radius: 1rem;
+
+    --success: 155 60% 45%;
   }
 }
 
 @layer base {
   * {
-    @apply border-black;
+    @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Space Grotesk", sans-serif;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
     text-transform: uppercase;
   }
 }
 
 @layer utilities {
-  .neo-shadow {
-    box-shadow: 4px 4px 0px 0px #000000;
-  }
-
-  .neo-shadow-lg {
-    box-shadow: 8px 8px 0px 0px #000000;
-  }
-
-  .neo-shadow-sm {
-    box-shadow: 2px 2px 0px 0px #000000;
+  .font-display {
+    font-family: 'Lilita One', cursive;
   }
 
   .neo-border {
-    border: 2px solid #000000;
+    border: 2.5px solid hsl(var(--foreground));
   }
 
-  .neo-button {
-    @apply neo-border neo-shadow-sm px-6 py-2 rounded-xl transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none bg-white;
+  .neo-shadow {
+    box-shadow: 4px 4px 0px 0px hsl(var(--foreground));
+  }
+
+  .neo-shadow-sm {
+    box-shadow: 2px 2px 0px 0px hsl(var(--foreground));
+  }
+
+  .neo-shadow-lg {
+    box-shadow: 6px 6px 0px 0px hsl(var(--foreground));
   }
 
   .neo-card {
-    @apply neo-border neo-shadow bg-white rounded-2xl overflow-hidden;
+    @apply neo-border neo-shadow rounded-2xl overflow-hidden;
+  }
+
+  .neo-button {
+    @apply neo-border neo-shadow-sm px-6 py-2 rounded-xl transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  }
+
+  .dot-pattern {
+    background-image: radial-gradient(circle, hsl(var(--foreground) / 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 
   .bg-grid-pattern {
-    background-image: radial-gradient(#000 0.5px, transparent 0.5px);
+    background-image: radial-gradient(hsl(var(--foreground)) 0.5px, transparent 0.5px);
     background-size: 20px 20px;
   }
 }
