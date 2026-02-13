@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DAppKitProvider } from "@mysten/dapp-kit-react";
 import { dAppKit } from "./lib/dapp-kit";
 import Index from "./pages/Index";
+import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,7 +20,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

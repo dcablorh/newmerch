@@ -1,5 +1,4 @@
 import { ShoppingCart, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Product } from "@/types/store";
 import { formatSui, walrusImageUrl } from "@/lib/sui-config";
@@ -7,9 +6,10 @@ import { formatSui, walrusImageUrl } from "@/lib/sui-config";
 interface ProductCardProps {
   product: Product;
   onPurchase: (product: Product) => void;
+  onClick?: () => void;
 }
 
-const ProductCard = ({ product, onPurchase }: ProductCardProps) => {
+const ProductCard = ({ product, onPurchase, onClick }: ProductCardProps) => {
   const inStock = product.stock > 0;
   const imageUrl = product.imageUrl
     ? product.imageUrl
@@ -18,8 +18,8 @@ const ProductCard = ({ product, onPurchase }: ProductCardProps) => {
       : "/placeholder.svg";
 
   return (
-    <div className="neo-card group h-full flex flex-col">
-      <div className="relative aspect-square overflow-hidden border-b-2 border-black bg-[#F5F5F5] flex-shrink-0">
+    <div className="neo-card group h-full flex flex-col bg-card overflow-hidden cursor-pointer" onClick={onClick}>
+      <div className="relative aspect-square overflow-hidden border-b-2 border-foreground bg-muted flex-shrink-0">
         <img
           src={imageUrl}
           alt={product.name}
@@ -29,48 +29,34 @@ const ProductCard = ({ product, onPurchase }: ProductCardProps) => {
               "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&auto=format&fit=crop&q=60";
           }}
         />
-        <div className="absolute left-2 sm:left-3 top-2 sm:top-3">
-          <Badge
-            className={`neo-border neo-shadow-sm px-2 sm:px-3 py-1 text-xs font-bold rounded-full ${
-              inStock ? "bg-primary text-black" : "bg-destructive text-white"
-            }`}
-          >
-            {inStock ? `${product.stock} LEFT` : "SOLD OUT"}
-          </Badge>
-        </div>
-      </div>
-      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 bg-white flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-2 min-h-0">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-base sm:text-lg font-extrabold uppercase leading-tight line-clamp-2">
-              {product.name}
-            </h3>
-            <p className="text-[8px] sm:text-[10px] font-bold text-muted-foreground uppercase mt-0.5 truncate">
-              Product #{product.productId}
-            </p>
+        {!imageUrl || imageUrl === "/placeholder.svg" ? (
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/40 font-bold text-sm uppercase">
+            No Product Image
           </div>
-          <p className="text-base sm:text-lg font-black flex-shrink-0 whitespace-nowrap">{formatSui(product.price)} SUI</p>
+        ) : null}
+      </div>
+      <div className="p-3 sm:p-4 space-y-2 bg-card flex flex-col flex-1">
+        <h3 className="font-display text-base sm:text-lg uppercase leading-tight line-clamp-2">
+          {product.name}
+        </h3>
+        <p className="text-[10px] font-medium text-muted-foreground italic line-clamp-2">
+          Official {product.name.toLowerCase()} from the blockchain huddle...
+        </p>
+        <div className="flex items-center justify-between mt-auto pt-2">
+          <span className="text-primary font-bold text-base sm:text-lg">
+            ${formatSui(product.price)}
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onPurchase(product);
+            }}
+            disabled={!inStock}
+            className="neo-button bg-card text-foreground font-bold px-3 py-1.5 text-xs uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {inStock ? "Add to Cart" : "Sold Out"}
+          </button>
         </div>
-
-        <Button
-          onClick={() => onPurchase(product)}
-          disabled={!inStock}
-          className="w-full neo-button bg-primary hover:bg-primary/90 text-black font-extrabold gap-2 uppercase text-xs sm:text-sm h-9 sm:h-10 mt-auto"
-        >
-          {inStock ? (
-            <>
-              <ShoppingCart className="h-3 sm:h-4 w-3 sm:w-4" />
-              <span className="hidden xs:inline">Add to Bag</span>
-              <span className="xs:hidden">Add</span>
-            </>
-          ) : (
-            <>
-              <Package className="h-3 sm:h-4 w-3 sm:w-4" />
-              <span className="hidden xs:inline">Sold Out</span>
-              <span className="xs:hidden">Out</span>
-            </>
-          )}
-        </Button>
       </div>
     </div>
   );
