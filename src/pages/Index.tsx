@@ -1,21 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentAccount } from "@mysten/dapp-kit-react";
-import WalletConnect from "@/components/WalletConnect";
+import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
 import CheckoutDialog from "@/components/CheckoutDialog";
-import AdminPanel from "@/components/AdminPanel";
-import ReceiptsPanel from "@/components/ReceiptsPanel";
 import { useProductObjects } from "@/hooks/use-store-data";
-import { useIsAdmin } from "@/hooks/use-admin-store";
+import { useCart } from "@/hooks/use-cart";
 import type { Product } from "@/types/store";
 import headerImage from "@/assets/sui-merch-header.png";
 import {
   Store,
   Loader2,
-  ShoppingBag,
-  Menu,
-  X,
   ArrowRight,
   Instagram,
   Twitter,
@@ -24,10 +19,9 @@ import {
 
 const Index = () => {
   const account = useCurrentAccount();
-  const { isAdmin } = useIsAdmin();
   const { data: products, isLoading } = useProductObjects();
+  const { addToCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleProductClick = (product: Product) => {
@@ -36,71 +30,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background dot-pattern font-sans selection:bg-primary/30">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b-2 border-foreground bg-card/95 backdrop-blur-md">
-        <div className="container mx-auto px-3 sm:px-4 h-12 sm:h-14 md:h-16 flex items-center justify-between gap-2">
-          {/* Left: Nav Links */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-6 flex-shrink-0">
-            <a href="#" className="text-[10px] lg:text-xs font-bold uppercase hover:text-primary transition-colors tracking-widest whitespace-nowrap">
-              Shop
-            </a>
-            <a href="#" className="text-[10px] lg:text-xs font-bold uppercase hover:text-primary transition-colors tracking-widest whitespace-nowrap">
-              My Orders
-            </a>
-          </div>
-
-          {/* Center: Brand */}
-          <h1 className="font-display text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide uppercase whitespace-nowrap absolute left-1/2 -translate-x-1/2">
-            SUI MERCH
-          </h1>
-
-          {/* Right: Actions */}
-          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto flex-shrink-0">
-            {account && isAdmin && (
-              <div className="hidden sm:block">
-                <AdminPanel />
-              </div>
-            )}
-            {account && (
-              <div className="hidden sm:block">
-                <ReceiptsPanel />
-              </div>
-            )}
-            <WalletConnect />
-            <button className="neo-button p-1.5 sm:p-2 bg-card flex-shrink-0">
-              <ShoppingBag className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden neo-button p-1.5 sm:p-2 bg-card flex-shrink-0"
-            >
-              {mobileMenuOpen ? <X className="w-3.5 sm:w-4 h-3.5 sm:h-4" /> : <Menu className="w-3.5 sm:w-4 h-3.5 sm:h-4" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t-2 border-foreground bg-card">
-            <div className="container mx-auto px-4 py-3 space-y-2">
-              <a href="#" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold hover:text-primary transition-colors py-2 uppercase">
-                Shop
-              </a>
-              <a href="#" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold hover:text-primary transition-colors py-2 uppercase">
-                My Orders
-              </a>
-              <div className="pt-2 border-t border-foreground/10 flex flex-col gap-2 sm:hidden">
-                {account && (
-                  <>
-                    <ReceiptsPanel />
-                    {isAdmin && <AdminPanel />}
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="container mx-auto px-3 sm:px-4 pt-4 sm:pt-6 md:pt-8">
@@ -123,10 +53,16 @@ const Index = () => {
               </p>
             </div>
             <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 w-full max-w-xs xs:max-w-none justify-center">
-              <button className="neo-button bg-primary text-primary-foreground font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2">
+              <button
+                onClick={() => navigate("/shop")}
+                className="neo-button bg-primary text-primary-foreground font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2"
+              >
                 SHOP SUITEES <ArrowRight className="w-3.5 h-3.5" />
               </button>
-              <button className="neo-button bg-card text-foreground font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2">
+              <button
+                onClick={() => navigate("/shop")}
+                className="neo-button bg-card text-foreground font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2"
+              >
                 COLLECTIBLES <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -156,13 +92,16 @@ const Index = () => {
                 <ProductCard
                   key={product.objectId}
                   product={product}
-                  onPurchase={setSelectedProduct}
+                  onPurchase={(p) => addToCart(p)}
                   onClick={() => handleProductClick(product)}
                 />
               ))}
             </div>
             <div className="flex justify-center mt-8 sm:mt-10">
-              <button className="neo-button bg-primary text-primary-foreground font-bold px-8 sm:px-12 py-3 sm:py-4 text-xs sm:text-base uppercase tracking-wide">
+              <button
+                onClick={() => navigate("/shop")}
+                className="neo-button bg-primary text-primary-foreground font-bold px-8 sm:px-12 py-3 sm:py-4 text-xs sm:text-base uppercase tracking-wide"
+              >
                 View All Products
               </button>
             </div>
@@ -190,14 +129,17 @@ const Index = () => {
             Stay cozy in the huddle with our new collection of ultra-soft hoodies.
           </p>
           <div className="pt-2">
-            <button className="neo-button bg-card text-foreground font-bold px-8 sm:px-12 py-2.5 sm:py-4 text-xs sm:text-base uppercase">
+            <button
+              onClick={() => navigate("/shop")}
+              className="neo-button bg-card text-foreground font-bold px-8 sm:px-12 py-2.5 sm:py-4 text-xs sm:text-base uppercase"
+            >
               Shop Now
             </button>
           </div>
         </div>
       </section>
 
-      {/* Join Section / Footer */}
+      {/* Join Section */}
       <section className="container mx-auto px-3 sm:px-4 py-8 sm:py-12 mb-8 sm:mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           <div className="neo-card bg-primary p-5 sm:p-8 md:p-10 flex flex-col justify-center space-y-4 sm:space-y-6">

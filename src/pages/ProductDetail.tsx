@@ -1,27 +1,22 @@
 import { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useCurrentAccount } from "@mysten/dapp-kit-react";
 import { useProductObjects } from "@/hooks/use-store-data";
-import { useIsAdmin } from "@/hooks/use-admin-store";
+import { useCart } from "@/hooks/use-cart";
+import Navbar from "@/components/Navbar";
 import CheckoutDialog from "@/components/CheckoutDialog";
 import WalletConnect from "@/components/WalletConnect";
-import AdminPanel from "@/components/AdminPanel";
-import ReceiptsPanel from "@/components/ReceiptsPanel";
 import { formatSui, walrusImageUrl } from "@/lib/sui-config";
-import suiMerchHeader from "@/assets/sui-merch-header.png";
 import type { Product } from "@/types/store";
 import {
   ArrowLeft,
   ShoppingCart,
-  ShoppingBag,
   Package,
   Loader2,
   Check,
   Home,
   Minus,
   Plus,
-  Menu,
-  X,
   CheckCircle,
 } from "lucide-react";
 
@@ -29,12 +24,11 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const account = useCurrentAccount();
-  const { isAdmin } = useIsAdmin();
   const { data: products, isLoading } = useProductObjects();
+  const { addToCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>("M");
   const [quantity, setQuantity] = useState(1);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const product = products?.find((p) => p.objectId === id);
   const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -72,84 +66,25 @@ const ProductDetail = () => {
 
   const inStock = product.stock > 0;
 
+  const handleAddToCart = () => {
+    addToCart(product, quantity, selectedSize);
+  };
+
   return (
     <div className="min-h-screen bg-background dot-pattern font-sans">
-      {/* Navbar - same as Index */}
-      <nav className="sticky top-0 z-50 border-b-2 border-foreground bg-card/95 backdrop-blur-md">
-        <div className="container mx-auto px-3 sm:px-4 h-12 sm:h-14 md:h-16 flex items-center justify-between gap-2">
-          <div className="hidden md:flex items-center gap-4 lg:gap-6 flex-shrink-0">
-            <Link to="/" className="text-[10px] lg:text-xs font-bold uppercase hover:text-primary transition-colors tracking-widest whitespace-nowrap">
-              Shop
-            </Link>
-            <a href="#" className="text-[10px] lg:text-xs font-bold uppercase hover:text-primary transition-colors tracking-widest whitespace-nowrap">
-              My Orders
-            </a>
-          </div>
+      <Navbar />
 
-          <Link to="/" className="font-display text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide uppercase whitespace-nowrap absolute left-1/2 -translate-x-1/2">
-            SUI MERCH
-          </Link>
-
-          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto flex-shrink-0">
-            {account && isAdmin && (
-              <div className="hidden sm:block">
-                <AdminPanel />
-              </div>
-            )}
-            {account && (
-              <div className="hidden sm:block">
-                <ReceiptsPanel />
-              </div>
-            )}
-            <WalletConnect />
-            <button className="neo-button p-1.5 sm:p-2 bg-card flex-shrink-0">
-              <ShoppingBag className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden neo-button p-1.5 sm:p-2 bg-card flex-shrink-0"
-            >
-              {mobileMenuOpen ? <X className="w-3.5 sm:w-4 h-3.5 sm:h-4" /> : <Menu className="w-3.5 sm:w-4 h-3.5 sm:h-4" />}
-            </button>
-          </div>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t-2 border-foreground bg-card">
-            <div className="container mx-auto px-4 py-3 space-y-2">
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold hover:text-primary transition-colors py-2 uppercase">
-                Shop
-              </Link>
-              <a href="#" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-bold hover:text-primary transition-colors py-2 uppercase">
-                My Orders
-              </a>
-              <div className="pt-2 border-t border-foreground/10 flex flex-col gap-2 sm:hidden">
-                {account && (
-                  <>
-                    <ReceiptsPanel />
-                    {isAdmin && <AdminPanel />}
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Product Content */}
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 max-w-7xl">
-        {/* Back button */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
           className="neo-button p-2 sm:p-3 bg-card hover:bg-muted transition-colors w-fit flex items-center gap-2 mb-4 sm:mb-6"
         >
           <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           <span className="font-bold uppercase text-xs sm:text-sm">Back</span>
         </button>
 
-        {/* Product Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-10 xl:gap-16">
-          {/* Left: Image */}
+          {/* Image */}
           <div className="neo-card bg-card overflow-hidden">
             <div className="aspect-square bg-muted/30 relative flex items-center justify-center p-4 sm:p-6">
               {imageUrl ? (
@@ -171,9 +106,8 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Right: Product Info */}
+          {/* Info */}
           <div className="flex flex-col gap-4 sm:gap-5">
-            {/* Title & Price */}
             <div className="space-y-3">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-display font-black uppercase leading-[0.9] tracking-tighter">
                 {product.name}
@@ -181,8 +115,8 @@ const ProductDetail = () => {
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <span className="font-display text-2xl sm:text-3xl">${formatSui(product.price)}</span>
                 <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border-2 ${
-                  inStock 
-                    ? "border-success text-success bg-success/10" 
+                  inStock
+                    ? "border-success text-success bg-success/10"
                     : "border-destructive text-destructive bg-destructive/10"
                 }`}>
                   {inStock && <Check className="h-3 w-3" />}
@@ -194,7 +128,7 @@ const ProductDetail = () => {
               </p>
             </div>
 
-            {/* Size Selector */}
+            {/* Size */}
             <div className="space-y-3">
               <h3 className="font-black text-sm uppercase tracking-widest italic">Size</h3>
               <div className="flex flex-wrap gap-2">
@@ -236,11 +170,11 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Add to Cart CTA */}
+            {/* CTA */}
             <div className="pt-2">
               {account ? (
                 <button
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={handleAddToCart}
                   disabled={!inStock}
                   className="w-full neo-button bg-primary text-primary-foreground font-black py-4 sm:py-5 text-base sm:text-lg uppercase flex items-center justify-center gap-3 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -281,7 +215,6 @@ const ProductDetail = () => {
               </ul>
             </div>
 
-            {/* On-chain metadata */}
             <div className="text-[10px] sm:text-xs text-muted-foreground space-y-1 pt-2">
               <p className="font-bold uppercase tracking-widest">Product #{product.productId} · Stock: {product.stock}</p>
               <p className="font-mono break-all opacity-60">{product.objectId}</p>
