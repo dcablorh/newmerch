@@ -7,6 +7,7 @@ import { DAppKitProvider } from "@mysten/dapp-kit-react";
 import { dAppKit } from "./lib/dapp-kit";
 import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
+import Shop from "./pages/Shop";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+              <Route path="/shop" element={<Shop />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="*" element={<NotFound />} />
           </Routes>
